@@ -11,7 +11,7 @@ The Authenticator service provides basic signup, email verification, login and p
 
 ##Run Tests
 
-You'll need a message que and database to run the tests but docker can help with this.
+You'll need a message queue and database to run the tests but docker can help with this.
 
 Start MongoDB:
 
@@ -24,6 +24,7 @@ Start RabbitMQ:
 You'll also need some RSA keys for crytpo, you can use something like openssl to generate fresh ones:
 
 `$ openssl genrsa -out ./crypto/testKey.pem 2048`
+
 `$ openssl rsa -in ./crypto/testKey.pem -pubout > ./crypto/testKey.pub`
 
 Then you can run the tests:
