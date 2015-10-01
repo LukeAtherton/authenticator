@@ -3,7 +3,7 @@
 
 [![Circle CI](https://circleci.com/gh/LukeAtherton/authenticator.svg?style=svg)](https://circleci.com/gh/LukeAtherton/authenticator)
 
-The Authenticator service provides basic signup, email verification, login and password reset functionality to the hivebase PaaS.
+The Authenticator service provides basic signup, email verification, login and password reset functionality to the hivebase.io PaaS.
 
 ##Installation
 
