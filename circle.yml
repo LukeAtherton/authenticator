@@ -1,0 +1,26 @@
+machine:
+  environment:
+    IMPORT_PATH: "github.com/${CIRCLE_PROJECT_USERNAME,,}/$CIRCLE_PROJECT_REPONAME"
+  services:
+    - rabbitmq-server
+    - docker
+dependencies:
+  pre:
+    - rm -rf ~/.go_workspace/src/$IMPORT_PATH
+    - mkdir -p ~/.go_workspace/src/github.com/${CIRCLE_PROJECT_USERNAME,,}/
+    - ln -s ~/$CIRCLE_PROJECT_REPONAME ~/.go_workspace/src/$IMPORT_PATH
+  override:
+    - go get github.com/tools/godep
+    - go get golang.org/x/tools/cmd/cover
+    - go get github.com/onsi/ginkgo/ginkgo
+    - go get github.com/modocache/gover
+    - go get github.com/modocache/gory
+    - go get github.com/onsi/gomega
+test:
+  override:
+    - ( cd ~/.go_workspace/src/$IMPORT_PATH/app && godep go test )
+deployment:
+  hivebase:
+    branch: master
+    commands:
+      - make publish

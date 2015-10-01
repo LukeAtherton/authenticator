@@ -1,0 +1,6 @@
+[template]
+keys        = [ "paas/mq/address", "paas/mq/username", "paas/mq/password", "paas/db/address" ]
+owner       = "root"
+mode        = "0644"
+src         = "authenticator.cfg.tmpl"
+dest        = "/etc/authenticator.cfg"

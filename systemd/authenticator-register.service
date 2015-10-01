@@ -1,0 +1,23 @@
+[Unit]
+Description=Registers authenticator
+BindsTo=authenticator.service
+After=authenticator.service
+
+[Service]
+EnvironmentFile=/etc/environment
+RemainAfterExit=yes
+ExecStartPre=/bin/bash -c "sleep 10s"
+ExecStart=/bin/sh -c "/bin/etcdctl set /vulcand/backends/authenticator/backend '{\"Type\": \"http\"}'; \
+  export SERVICE_PORT=$(timeout 5s docker ps -a | grep authenticator | awk 'match($0,/[0-9]*->8001/) {print substr($0,RSTART,RLENGTH)}' | awk -F '->' '{print $1}') && \
+  echo Docker Port: $SERVICE_PORT && \
+  /bin/etcdctl set /vulcand/backends/authenticator/servers/authenticator '{\"URL\": \"http://${COREOS_PRIVATE_IPV4}:'$SERVICE_PORT'\"}'; \
+  /bin/etcdctl set /vulcand/frontends/api-auth/frontend '{\"Type\": \"http\", \"BackendId\": \"authenticator\", \"Route\": \"Host(`hivebase.io`) && PathRegexp(`^/api/auth.*`)\"}'; \
+  /bin/etcdctl set /vulcand/frontends/api-emails/frontend '{\"Type\": \"http\", \"BackendId\": \"authenticator\", \"Route\": \"Host(`hivebase.io`) && PathRegexp(`^/api/emails.*`)\"}'; \
+  /bin/etcdctl set /vulcand/frontends/api-email-verification/frontend '{\"Type\": \"http\", \"BackendId\": \"authenticator\", \"Route\": \"Host(`hivebase.io`) && PathRegexp(`^/api/verification.*`)\"}'; \
+  /bin/etcdctl set /vulcand/frontends/api-registrations/frontend '{\"Type\": \"http\", \"BackendId\": \"authenticator\", \"Route\": \"Host(`hivebase.io`) && PathRegexp(`^/api/registrations.*`)\"}'; \
+  /bin/etcdctl set /vulcand/frontends/api-credentials/frontend '{\"Type\": \"http\", \"BackendId\": \"authenticator\", \"Route\": \"Host(`hivebase.io`) && PathRegexp(`^/api/credentials.*`)\"}';"
+ ExecStop=/bin/sh -c "/bin/etcdctl rm /vulcand/backends/authenticator/servers/authenticator;"
+
+[X-Fleet]
+X-ConditionMachineOf=authenticator.service
+X-Conflicts=authenticator-register.service

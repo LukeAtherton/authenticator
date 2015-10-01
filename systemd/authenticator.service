@@ -1,0 +1,32 @@
+[Unit]
+Description=User Authentication Service
+Requires=docker.service
+After=docker.service
+Requires=authenticator-register.service
+Before=authenticator-register.service
+
+[Service]
+TimeoutStartSec=0
+
+# Change killmode from "control-group" to "none" to let Docker remove work correctly.
+KillMode=none
+
+# Load env variables from coreos
+EnvironmentFile=/etc/environment
+
+# Commands with =- are allowed to fail
+ExecStartPre=-/usr/bin/docker kill authenticator
+ExecStartPre=-/usr/bin/docker rm authenticator
+
+ExecStartPre=/usr/bin/docker pull docker.hivebase.io:5000/authenticator
+ExecStart=/bin/bash -c "/usr/bin/docker start -a authenticator \
+	|| /usr/bin/docker run --rm \
+	-P \
+	-e \"HOST_IP=$COREOS_PRIVATE_IPV4\" \
+	--name authenticator \
+	docker.hivebase.io:5000/authenticator"
+ExecStop=/usr/bin/docker stop authenticator
+
+[X-Fleet]
+X-Conflicts=authenticator.service
+X-ConditionMachineMetadata=role=minion
