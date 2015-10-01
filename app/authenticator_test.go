@@ -430,16 +430,16 @@ var _ = Describe("Auth Server", func() {
 				Expect(responseJSON["id"]).To(Equal(credentials.Id.String()))
 			})
 
-			Measure("authentication should take less than 400ms", func(b Benchmarker) {
-				runtime := b.Time("runtime", func() {
-					server.ServeHTTP(recorder, request)
-					Expect(recorder.Code).To(Equal(200))
-				})
+			// Measure("authentication should take less than 400ms", func(b Benchmarker) {
+			// 	runtime := b.Time("runtime", func() {
+			// 		server.ServeHTTP(recorder, request)
+			// 		Expect(recorder.Code).To(Equal(200))
+			// 	})
 
-				Ω(runtime.Seconds()).Should(BeNumerically("<", 0.4), "authentication shouldn't take longer than 400ms.")
+			// 	Ω(runtime.Seconds()).Should(BeNumerically("<", 0.4), "authentication shouldn't take longer than 400ms.")
 
-				//b.RecordValue("disk usage (in MB)", HowMuchDiskSpaceDidYouUse())
-			}, 10)
+			// 	//b.RecordValue("disk usage (in MB)", HowMuchDiskSpaceDidYouUse())
+			// }, 10)
 		})
 
 	})
