@@ -1,7 +1,7 @@
 package hello
 
 import (
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/gin-gonic/gin" // This function's name is a must. App Engine uses it to drive the requests properly.
+	"github.com/gin-gonic/gin" // This function's name is a must. App Engine uses it to drive the requests properly.
 	"net/http"
 )
 

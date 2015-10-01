@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/gin-gonic/gin/binding"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/gin-gonic/gin/render"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/julienschmidt/httprouter"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/gin-gonic/gin/render"
+	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
 )

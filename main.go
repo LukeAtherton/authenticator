@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	. "github.com/lukeatherton/hivebase-authenticator/app"
+	. "github.com/lukeatherton/authenticator/app"
 )
 
 func main() {

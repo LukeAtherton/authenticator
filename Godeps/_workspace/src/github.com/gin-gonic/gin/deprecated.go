@@ -5,7 +5,7 @@
 package gin
 
 import (
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/gin-gonic/gin/binding"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 )
 

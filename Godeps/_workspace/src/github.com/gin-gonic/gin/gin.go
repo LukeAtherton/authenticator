@@ -6,8 +6,8 @@ package gin
 
 import (
 	"fmt"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/gin-gonic/gin/render"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/julienschmidt/httprouter"
+	"github.com/gin-gonic/gin/render"
+	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"math"
 	"net/http"

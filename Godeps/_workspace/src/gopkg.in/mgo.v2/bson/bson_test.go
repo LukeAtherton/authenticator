@@ -36,8 +36,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2/bson"
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func TestAll(t *testing.T) {

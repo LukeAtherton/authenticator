@@ -38,8 +38,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2" // Test both with a normal database and with an authenticated shard.
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2" // Test both with a normal database and with an authenticated shard.
 )
 
 func (s *S) TestAuthLoginDatabase(c *C) {

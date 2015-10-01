@@ -2,8 +2,8 @@ package txn_test
 
 import (
 	"bytes"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2"
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2"
 	"os/exec"
 	"time"
 )

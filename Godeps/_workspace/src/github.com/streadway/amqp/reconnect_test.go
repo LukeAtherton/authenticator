@@ -2,7 +2,7 @@ package amqp_test
 
 import (
 	"fmt"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/streadway/amqp"
+	"github.com/streadway/amqp"
 	"os"
 )
 

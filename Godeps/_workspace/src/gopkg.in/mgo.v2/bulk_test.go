@@ -27,8 +27,8 @@
 package mgo_test
 
 import (
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2"
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2"
 )
 
 func (s *S) TestBulkInsert(c *C) {

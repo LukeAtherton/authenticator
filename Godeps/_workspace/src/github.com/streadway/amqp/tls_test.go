@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/github.com/streadway/amqp"
+	"github.com/streadway/amqp"
 	"io"
 	"net"
 	"testing"

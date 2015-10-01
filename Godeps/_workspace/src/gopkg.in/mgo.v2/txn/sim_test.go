@@ -2,10 +2,10 @@ package txn_test
 
 import (
 	"flag"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2/bson"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2/txn"
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"gopkg.in/mgo.v2/txn"
 	"math/rand"
 	"time"
 )

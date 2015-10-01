@@ -15,8 +15,8 @@ import (
 	"sync"
 
 	crand "crypto/rand"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2"
-	"github.com/lukeatherton/authenticator/Godeps/_workspace/src/gopkg.in/mgo.v2/bson"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	mrand "math/rand"
 )
 
