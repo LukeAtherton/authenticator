@@ -5,6 +5,8 @@ package authenticator
 import (
 	"encoding/xml"
 	"time"
+
+	. "github.com/lukeatherton/identity"
 )
 
 type Credentials struct {

@@ -3,9 +3,11 @@
 package authenticator
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	. "github.com/lukeatherton/domain-events"
 )
 
 func InitApiServices(publisher Publisher, repo Repo, auth Authenticator) gin.HandlerFunc {

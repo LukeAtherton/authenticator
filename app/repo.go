@@ -9,6 +9,8 @@ import (
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	. "github.com/lukeatherton/identity"
 )
 
 type Repo interface {
@@ -22,7 +24,7 @@ type Repo interface {
 const (
 	MongoDBHosts = "127.0.0.1:27000"
 	AuthDatabase = "admin"
-	AuthUserName = "hivebase"
+	AuthUserName = "admin"
 	AuthPassword = "test"
 	AppDatabase  = "authentication-prod"
 	TestDatabase = "authentication-test"

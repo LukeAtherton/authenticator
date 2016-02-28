@@ -3,11 +3,12 @@
 package authenticator
 
 import (
-	"code.google.com/p/go.crypto/pbkdf2"
 	"crypto/rand"
 	"crypto/sha512"
 	"crypto/subtle"
 	"io"
+
+	"golang.org/x/crypto/pbkdf2"
 )
 
 var (

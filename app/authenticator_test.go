@@ -9,13 +9,17 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"net/http"
+	"net/http/httptest"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/modocache/gory"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"net/http"
-	"net/http/httptest"
-	"strings"
+
+	. "github.com/lukeatherton/domain-events"
+	. "github.com/lukeatherton/identity"
 )
 
 /*
@@ -267,13 +271,13 @@ var _ = Describe("Auth Server", func() {
 				for _, m := range testPublisher.messages {
 					switch m.GetMessageType() {
 					case "User.Registered":
-						var message *UserRegistered
-						message, _ = m.(*UserRegistered)
+						var message UserRegistered
+						message, _ = m.(UserRegistered)
 						Expect(message.Email == "latherton0@example.com")
 
 					case "Email.Verification.Pending":
-						var message *EmailVerificationPending
-						message, _ = m.(*EmailVerificationPending)
+						var message EmailVerificationPending
+						message, _ = m.(EmailVerificationPending)
 						Expect(message.Email == "latherton0@example.com")
 					}
 				}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	. "github.com/lukeatherton/authenticator/app"
+	. "github.com/lukeatherton/domain-events"
 )
 
 func main() {

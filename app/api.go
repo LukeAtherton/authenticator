@@ -8,7 +8,24 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	. "github.com/lukeatherton/domain-events"
+	. "github.com/lukeatherton/identity"
 )
+
+func GetIdParam(param string, c *gin.Context) ID {
+	id := Parse(param)
+
+	if id == nil {
+		errorResponse := ErrorResponse{
+			Errors: []*Error{NewError(ErrCodeValueRequired, fmt.Sprintf("valid id required", param))},
+		}
+		c.JSON(http.StatusBadRequest, errorResponse)
+		c.Abort()
+		return nil
+	}
+
+	return id
+}
 
 //Authenticates a User and returns an Auth token for use in future requests
 func Authenticate(c *gin.Context) {
@@ -115,7 +132,7 @@ func VerifyEmail(c *gin.Context) {
 				repo.SaveCredentials(userId, user)
 
 				if c.Request.Header.Get("CID") == "" {
-					go publisher.PublishMessage(NewEmailVerifiedEvent(userId, email, ""))
+					go publisher.PublishMessage(NewEmailVerifiedEvent(userId, email, nil))
 				}
 
 				c.JSON(http.StatusOK, "email verified")
@@ -173,8 +190,8 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	go publisher.PublishMessage(NewUserRegisteredEvent(credentials.Id, credentials.Email, ""))
-	go publisher.PublishMessage(NewEmailVerificationPendingEvent(credentials.Id, credentials.Email, credentials.EmailVerificationCode, ""))
+	go publisher.PublishMessage(NewUserRegisteredEvent(credentials.Id, credentials.Email, nil))
+	go publisher.PublishMessage(NewEmailVerificationPendingEvent(credentials.Id, credentials.Email, credentials.EmailVerificationCode, nil))
 
 	response := AuthResponse{
 		Id:    credentials.Id,
@@ -207,7 +224,7 @@ func DecodeRegistrationDetails(reg *UserRegistrationView) (*Credentials, *Error)
 func ChangePassword(c *gin.Context) {
 	auth := c.MustGet("auth").(Authenticator)
 	repo := c.MustGet("repo").(Repo)
-	id := DecodeIdString(c.MustGet("userId").(string))
+	id := GetIdParam(c.MustGet("userId").(string), c)
 	email := c.MustGet("email").(string)
 
 	var view *ChangePasswordView
