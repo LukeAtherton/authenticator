@@ -7,17 +7,16 @@ import (
 	"log"
 	"time"
 
+	"github.com/satori/go.uuid"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-
-	. "github.com/lukeatherton/identity"
 )
 
 type Repo interface {
-	SaveCredentials(userId ID, credentials *Credentials) (err error)
-	GetCredentials(userId ID) (credentials *Credentials, err error)
+	SaveCredentials(userId uuid.UUID, credentials *Credentials) (err error)
+	GetCredentials(userId uuid.UUID) (credentials *Credentials, err error)
 
-	FindEmail(email string) (id ID, err error)
+	FindEmail(email string) (id uuid.UUID, err error)
 	Cleanup()
 }
 
@@ -149,7 +148,7 @@ func (repo *MongoDBRepo) Cleanup() {
 	fmt.Println("Database Cleared")
 }
 
-func (repo *MongoDBRepo) SaveCredentials(userId ID, credentials *Credentials) (err error) {
+func (repo *MongoDBRepo) SaveCredentials(userId uuid.UUID, credentials *Credentials) (err error) {
 
 	// Request a socket connection from the session to process our query.
 	// Close the session when the goroutine exits and put the connection back
@@ -165,7 +164,7 @@ func (repo *MongoDBRepo) SaveCredentials(userId ID, credentials *Credentials) (e
 	return err
 }
 
-func (repo *MongoDBRepo) GetCredentials(userId ID) (credentials *Credentials, err error) {
+func (repo *MongoDBRepo) GetCredentials(userId uuid.UUID) (credentials *Credentials, err error) {
 
 	// Request a socket connection from the session to process our query.
 	// Close the session when the goroutine exits and put the connection back
@@ -182,7 +181,7 @@ func (repo *MongoDBRepo) GetCredentials(userId ID) (credentials *Credentials, er
 	return result, err
 }
 
-func (repo *MongoDBRepo) FindEmail(email string) (id ID, err error) {
+func (repo *MongoDBRepo) FindEmail(email string) (id uuid.UUID, err error) {
 	// Request a socket connection from the session to process our query.
 	// Close the session when the goroutine exits and put the connection back
 	// into the pool.

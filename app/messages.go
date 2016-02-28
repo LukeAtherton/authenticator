@@ -4,7 +4,7 @@ package authenticator
 
 import (
 	. "github.com/lukeatherton/domain-events"
-	. "github.com/lukeatherton/identity"
+	"github.com/satori/go.uuid"
 )
 
 const (
@@ -13,13 +13,13 @@ const (
 
 type DeliveryOpened struct {
 	*MessageHeader  `json:"header" bson:"header"`
-	Id              ID     `json:"id" bson:"id"`
-	ItemDescription string `json:"item_description" bson:"item_description"`
-	PickupAddress   string `json:"pickup_address" bson:"pickup_address"`
-	DeliveryAddress string `json:"delivery_address" bson:"delivery_address"`
+	Id              uuid.UUID `json:"id" bson:"id"`
+	ItemDescription string    `json:"item_description" bson:"item_description"`
+	PickupAddress   string    `json:"pickup_address" bson:"pickup_address"`
+	DeliveryAddress string    `json:"delivery_address" bson:"delivery_address"`
 }
 
-func NewDeliveryOpenedEvent(id ID, itemDescription string, pickupAddress string, deliveryAddress string, senderId ID) DeliveryOpened {
+func NewDeliveryOpenedEvent(id uuid.UUID, itemDescription string, pickupAddress string, deliveryAddress string, senderId uuid.UUID) DeliveryOpened {
 	return DeliveryOpened{
 		MessageHeader:   BuildHeader("Delivery.Opened", &EventSource{Service: SERVICE_NAME, UserId: senderId}),
 		Id:              id,
@@ -33,11 +33,11 @@ func NewDeliveryOpenedEvent(id ID, itemDescription string, pickupAddress string,
 
 type UserRegistered struct {
 	*MessageHeader `json:"header" xml:"header"`
-	Id             ID     `json:"id" xml:"id"`
-	Email          string `json:"email" xml:"email"`
+	Id             uuid.UUID `json:"id" xml:"id"`
+	Email          string    `json:"email" xml:"email"`
 }
 
-func NewUserRegisteredEvent(id ID, email string, senderId ID) UserRegistered {
+func NewUserRegisteredEvent(id uuid.UUID, email string, senderId uuid.UUID) UserRegistered {
 	return UserRegistered{
 		MessageHeader: BuildHeader("User.Registered", &EventSource{Service: SERVICE_NAME, UserId: senderId}),
 		Id:            id,
@@ -49,12 +49,12 @@ func NewUserRegisteredEvent(id ID, email string, senderId ID) UserRegistered {
 
 type EmailVerificationPending struct {
 	*MessageHeader        `json:"header" xml:"header"`
-	Id                    ID     `json:"id" xml:"id"`
-	Email                 string `json:"email" xml:"email"`
-	EmailVerificationCode string `json:"email_verification_code" xml:"email_verification_code"`
+	Id                    uuid.UUID `json:"id" xml:"id"`
+	Email                 string    `json:"email" xml:"email"`
+	EmailVerificationCode string    `json:"email_verification_code" xml:"email_verification_code"`
 }
 
-func NewEmailVerificationPendingEvent(id ID, email string, emailVerificationCode string, senderId ID) EmailVerificationPending {
+func NewEmailVerificationPendingEvent(id uuid.UUID, email string, emailVerificationCode string, senderId uuid.UUID) EmailVerificationPending {
 	return EmailVerificationPending{
 		MessageHeader: BuildHeader("Email.Verification.Pending", &EventSource{Service: SERVICE_NAME, UserId: senderId}),
 		Id:            id,
@@ -67,11 +67,11 @@ func NewEmailVerificationPendingEvent(id ID, email string, emailVerificationCode
 
 type EmailVerified struct {
 	*MessageHeader `json:"header" xml:"header"`
-	Id             ID     `json:"id" xml:"id"`
-	Email          string `json:"email" xml:"email"`
+	Id             uuid.UUID `json:"id" xml:"id"`
+	Email          string    `json:"email" xml:"email"`
 }
 
-func NewEmailVerifiedEvent(id ID, email string, senderId ID) EmailVerified {
+func NewEmailVerifiedEvent(id uuid.UUID, email string, senderId uuid.UUID) EmailVerified {
 	return EmailVerified{
 		MessageHeader: BuildHeader("Email.Verified", &EventSource{Service: SERVICE_NAME, UserId: senderId}),
 		Id:            id,

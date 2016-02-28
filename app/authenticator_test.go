@@ -4,6 +4,7 @@ package authenticator_test
 
 import (
 	. "github.com/lukeatherton/authenticator/app"
+	"github.com/satori/go.uuid"
 
 	"bytes"
 	"encoding/json"
@@ -19,7 +20,6 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/lukeatherton/domain-events"
-	. "github.com/lukeatherton/identity"
 )
 
 /*
@@ -132,7 +132,7 @@ var _ = Describe("Auth Server", func() {
 			BeforeEach(func() {
 				regView := gory.Build("userRegistrationDuplicate").(*UserRegistrationView)
 				credentials, _ = DecodeRegistrationDetails(regView)
-				credentials.Id = NewUUID()
+				credentials.Id = uuid.NewV4()
 
 				repo.SaveCredentials(credentials.Id, credentials)
 			})
@@ -187,8 +187,8 @@ var _ = Describe("Auth Server", func() {
 			BeforeEach(func() {
 				regView := gory.Build("userRegistrationDuplicate").(*UserRegistrationView)
 				credentials, _ = DecodeRegistrationDetails(regView)
-				credentials.Id = NewUUID()
-				credentials.EmailVerificationCode = NewUUID().String()
+				credentials.Id = uuid.NewV4()
+				credentials.EmailVerificationCode = uuid.NewV4().String()
 
 				repo.SaveCredentials(credentials.Id, credentials)
 
@@ -339,7 +339,7 @@ var _ = Describe("Auth Server", func() {
 			BeforeEach(func() {
 				regView := gory.Build("userRegistrationDuplicate").(*UserRegistrationView)
 				credentials, _ = DecodeRegistrationDetails(regView)
-				credentials.Id = NewUUID()
+				credentials.Id = uuid.NewV4()
 
 				repo.SaveCredentials(credentials.Id, credentials)
 
@@ -387,7 +387,7 @@ var _ = Describe("Auth Server", func() {
 			BeforeEach(func() {
 				regView := gory.Build("userRegistrationDuplicate").(*UserRegistrationView)
 				credentials, _ = DecodeRegistrationDetails(regView)
-				credentials.Id = NewUUID()
+				credentials.Id = uuid.NewV4()
 				credentials.IsEmailVerified = true
 
 				repo.SaveCredentials(credentials.Id, credentials)
@@ -455,7 +455,7 @@ var _ = Describe("Auth Server", func() {
 		BeforeEach(func() {
 			regView := gory.Build("userRegistration").(*UserRegistrationView)
 			credentials, _ = DecodeRegistrationDetails(regView)
-			credentials.Id = NewUUID()
+			credentials.Id = uuid.NewV4()
 			credentials.IsEmailVerified = true
 
 			repo.SaveCredentials(credentials.Id, credentials)

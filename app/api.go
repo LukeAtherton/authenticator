@@ -9,19 +9,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 	. "github.com/lukeatherton/domain-events"
-	. "github.com/lukeatherton/identity"
+	"github.com/satori/go.uuid"
 )
 
-func GetIdParam(param string, c *gin.Context) ID {
-	id := Parse(param)
-
-	if id == nil {
+func GetIdParam(param string, c *gin.Context) uuid.UUID {
+	id, err := uuid.FromString(param)
+	if err != nil {
 		errorResponse := ErrorResponse{
 			Errors: []*Error{NewError(ErrCodeValueRequired, fmt.Sprintf("valid id required", param))},
 		}
 		c.JSON(http.StatusBadRequest, errorResponse)
 		c.Abort()
-		return nil
+		return uuid.Nil
 	}
 
 	return id
@@ -86,7 +85,7 @@ func CheckEmail(c *gin.Context) {
 			return
 		}
 
-		if user != nil {
+		if user != uuid.Nil {
 			c.JSON(http.StatusFound, email)
 			return
 		}
@@ -119,7 +118,7 @@ func VerifyEmail(c *gin.Context) {
 			return
 		}
 
-		if userId != nil {
+		if userId != uuid.Nil {
 			user, err := repo.GetCredentials(userId)
 
 			if err != nil && err.Error() != "not found" {
@@ -132,7 +131,7 @@ func VerifyEmail(c *gin.Context) {
 				repo.SaveCredentials(userId, user)
 
 				if c.Request.Header.Get("CID") == "" {
-					go publisher.PublishMessage(NewEmailVerifiedEvent(userId, email, nil))
+					go publisher.PublishMessage(NewEmailVerifiedEvent(userId, email, uuid.Nil))
 				}
 
 				c.JSON(http.StatusOK, "email verified")
@@ -168,14 +167,14 @@ func RegisterUser(c *gin.Context) {
 
 	duplicateUserId, _ := repo.FindEmail(credentials.Email)
 
-	if duplicateUserId != nil {
+	if duplicateUserId != uuid.Nil {
 		c.JSON(http.StatusBadRequest, NewError(ErrCodeAlreadyExists, "user email exists"))
 		return
 	}
 
-	credentials.Id = NewUUID()
+	credentials.Id = uuid.NewV4()
 	credentials.IsEmailVerified = false
-	credentials.EmailVerificationCode = NewUUID().String()
+	credentials.EmailVerificationCode = uuid.NewV4().String()
 
 	err := repo.SaveCredentials(credentials.Id, credentials)
 	if err != nil {
@@ -190,8 +189,8 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	go publisher.PublishMessage(NewUserRegisteredEvent(credentials.Id, credentials.Email, nil))
-	go publisher.PublishMessage(NewEmailVerificationPendingEvent(credentials.Id, credentials.Email, credentials.EmailVerificationCode, nil))
+	go publisher.PublishMessage(NewUserRegisteredEvent(credentials.Id, credentials.Email, uuid.Nil))
+	go publisher.PublishMessage(NewEmailVerificationPendingEvent(credentials.Id, credentials.Email, credentials.EmailVerificationCode, uuid.Nil))
 
 	response := AuthResponse{
 		Id:    credentials.Id,
@@ -236,48 +235,46 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	if id != nil {
-		_, auth_err := auth.Authenticate(email, view.OldPassword, "")
-		if auth_err != nil {
-			c.JSON(http.StatusUnauthorized, "")
-			return
-		}
+	_, auth_err := auth.Authenticate(email, view.OldPassword, "")
+	if auth_err != nil {
+		c.JSON(http.StatusUnauthorized, "")
+		return
+	}
 
-		credentials, err := repo.GetCredentials(id)
+	credentials, err := repo.GetCredentials(id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if credentials != nil {
+		passwordKey := DeriveKey(view.NewPassword)
+
+		credentials.Salt = passwordKey.Salt
+		credentials.Key = passwordKey.Key
+
+		err := repo.SaveCredentials(id, credentials)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		if credentials != nil {
-			passwordKey := DeriveKey(view.NewPassword)
-
-			credentials.Salt = passwordKey.Salt
-			credentials.Key = passwordKey.Key
-
-			err := repo.SaveCredentials(id, credentials)
-
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, err.Error())
-				return
-			}
-
-			token, auth_err := auth.Authenticate(email, view.NewPassword, "")
-			if auth_err != nil {
-				c.JSON(http.StatusUnauthorized, "")
-				return
-			}
-
-			response := AuthResponse{
-				Id:    id,
-				Email: email,
-				Token: token,
-			}
-
-			c.JSON(http.StatusCreated, response)
+		token, auth_err := auth.Authenticate(email, view.NewPassword, "")
+		if auth_err != nil {
+			c.JSON(http.StatusUnauthorized, "")
 			return
 		}
+
+		response := AuthResponse{
+			Id:    id,
+			Email: email,
+			Token: token,
+		}
+
+		c.JSON(http.StatusCreated, response)
+		return
 	}
 
 	c.JSON(http.StatusInternalServerError, "password change failed")

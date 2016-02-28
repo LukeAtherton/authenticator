@@ -6,12 +6,12 @@ import (
 	"encoding/xml"
 	"time"
 
-	. "github.com/lukeatherton/identity"
+	"github.com/satori/go.uuid"
 )
 
 type Credentials struct {
 	XMLName               xml.Name  `json:"-" xml:"credentials" bson:"-"`
-	Id                    ID        `json:"id" xml:"id" bson:"id,omitempty"`
+	Id                    uuid.UUID `json:"id" xml:"id" bson:"id,omitempty"`
 	Email                 string    `json:"email" xml:"email" bson:"email"`
 	Salt                  []byte    `json:"salt" xml:"salt" bson:"salt"`
 	Key                   []byte    `json:"key" xml:"key" bson:"key"`
@@ -23,10 +23,10 @@ type Credentials struct {
 }
 
 type AuthResponse struct {
-	XMLName xml.Name `json:"-" xml:"auth_response" bson:"-"`
-	Id      ID       `json:"id" xml:"id" bson:"id"`
-	Email   string   `json:"email" xml:"email" bson:"email"`
-	Token   string   `json:"token" xml:"token" bson:"token"`
+	XMLName xml.Name  `json:"-" xml:"auth_response" bson:"-"`
+	Id      uuid.UUID `json:"id" xml:"id" bson:"id"`
+	Email   string    `json:"email" xml:"email" bson:"email"`
+	Token   string    `json:"token" xml:"token" bson:"token"`
 }
 
 type UserRegistrationView struct {

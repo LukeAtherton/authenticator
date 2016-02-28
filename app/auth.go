@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/satori/go.uuid"
 )
 
 type Authenticator interface {
@@ -42,13 +43,13 @@ func (auth *TokenAuthenticator) Authenticate(email string, password string, uri 
 		fmt.Printf("ERROR: %s\n", dbErr.Error())
 	}
 
-	if userId == nil {
+	if userId == uuid.Nil {
 		return "", errors.New("Authentication Failed: Invalid username.")
 	}
 
 	credentials, _ := auth.repo.GetCredentials(userId)
 
-	if credentials.Id == nil {
+	if credentials.Id == uuid.Nil {
 		return "", errors.New("Authentication Failed: Unable to find user credentials.")
 	}
 
